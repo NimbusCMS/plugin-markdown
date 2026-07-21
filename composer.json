@@ -1,0 +1,61 @@
+{
+    "name": "nimbuscms/markdown",
+    "description": "A Markdown field type for NimbusCMS. The official reference plugin.",
+    "type": "nimbuscms-plugin",
+    "keywords": [
+        "nimbuscms",
+        "nimbuscms-plugin",
+        "markdown",
+        "cms"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "DanMat"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.2",
+        "phpunit/phpunit": "^11.0",
+        "nimbuscms/nimbus": "dev-main"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/NimbusCMS/nimbus"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "NimbusCMS\\Markdown\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "NimbusCMS\\Markdown\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "nimbus": {
+            "id": "nimbuscms.markdown",
+            "plugin": "NimbusCMS\\Markdown\\MarkdownPlugin"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "analyse": "phpstan analyse --memory-limit=512M",
+        "check": [
+            "@analyse",
+            "@test"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
