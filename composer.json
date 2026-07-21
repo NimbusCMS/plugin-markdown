@@ -16,12 +16,12 @@
     ],
     "require": {
         "php": ">=8.2",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "nimbuscms/nimbus": "dev-main"
     },
     "require-dev": {
         "phpstan/phpstan": "^2.2",
-        "phpunit/phpunit": "^11.0",
-        "nimbuscms/nimbus": "dev-main"
+        "phpunit/phpunit": "^11.0"
     },
     "repositories": [
         {
