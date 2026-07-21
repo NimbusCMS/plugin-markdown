@@ -23,6 +23,6 @@ final class MarkdownPlugin implements Plugin
 
     public function register(PluginContext $context): void
     {
-        $context->fieldTypes()->register(new MarkdownFieldType(), self::ID);
+        $context->fieldTypes()->register(new MarkdownFieldType());
     }
 }
