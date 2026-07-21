@@ -14,6 +14,15 @@ the contract rather than its own complexity.
 composer require nimbuscms/markdown
 ```
 
+> **Not on Packagist yet.** Neither this plugin nor core is published, so that
+> command does not work outside the project today. Until core tags `0.1.0` and
+> both are published, this package requires core through a VCS repository at
+> `dev-main` — see `composer.json`. That means every build here tracks core's
+> `main` and cannot pin a version, so a breaking change to core breaks this
+> plugin's CI the moment it merges. The path out is tracked under
+> [Release & packaging](https://github.com/NimbusCMS/nimbus/blob/main/ROADMAP.md)
+> in the core roadmap.
+
 That is the whole installation. Nimbus discovers plugins through Composer's
 `installed.json` — there is no upload step and no in-admin installer, because
 downloading and executing arbitrary code from the web is a feature that needs
