@@ -115,3 +115,7 @@ replacing it.
 ## License
 
 [MIT](LICENSE)
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md). Compatibility with core is documented in the core [COMPATIBILITY](https://github.com/NimbusCMS/nimbus/blob/main/docs/COMPATIBILITY.md) policy.
