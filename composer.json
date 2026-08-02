@@ -20,6 +20,7 @@
         "nimbuscms/nimbus": "dev-main"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.95",
         "phpstan/phpstan": "^2.2",
         "phpunit/phpunit": "^11.0"
     },
@@ -51,7 +52,9 @@
         "check": [
             "@analyse",
             "@test"
-        ]
+        ],
+        "format": "php-cs-fixer fix",
+        "format:check": "php-cs-fixer fix --dry-run --diff"
     },
     "config": {
         "sort-packages": true
