@@ -9,6 +9,7 @@ use Nimbus\Content\Field;
 use Nimbus\Content\FieldTypeRegistry;
 use Nimbus\Content\UnknownFieldType;
 use Nimbus\Content\Validator;
+use Nimbus\Plugin\PluginCapabilities;
 use Nimbus\Plugin\PluginContext;
 use NimbusCMS\Markdown\MarkdownFieldType;
 use NimbusCMS\Markdown\MarkdownPlugin;
@@ -34,7 +35,7 @@ final class MarkdownFieldTypeTest extends TestCase
     public function test_the_plugin_registers_its_field_type(): void
     {
         $registry = new FieldTypeRegistry();
-        (new MarkdownPlugin())->register(new PluginContext($registry, MarkdownPlugin::ID));
+        (new MarkdownPlugin())->register(new PluginContext(new PluginCapabilities(fieldTypes: $registry), MarkdownPlugin::ID));
 
         self::assertTrue($registry->has('markdown'));
         self::assertSame('markdown', $registry->get('markdown')->type());
@@ -44,7 +45,7 @@ final class MarkdownFieldTypeTest extends TestCase
     public function test_the_type_appears_in_the_field_picker(): void
     {
         $registry = new FieldTypeRegistry();
-        (new MarkdownPlugin())->register(new PluginContext($registry, MarkdownPlugin::ID));
+        (new MarkdownPlugin())->register(new PluginContext(new PluginCapabilities(fieldTypes: $registry), MarkdownPlugin::ID));
 
         self::assertArrayHasKey('markdown', $registry->choices());
         self::assertSame('Markdown', $registry->choices()['markdown']);
@@ -62,10 +63,10 @@ final class MarkdownFieldTypeTest extends TestCase
     public function test_registering_twice_is_rejected_by_core(): void
     {
         $registry = new FieldTypeRegistry();
-        (new MarkdownPlugin())->register(new PluginContext($registry, MarkdownPlugin::ID));
+        (new MarkdownPlugin())->register(new PluginContext(new PluginCapabilities(fieldTypes: $registry), MarkdownPlugin::ID));
 
         $this->expectException(\Nimbus\Content\DuplicateFieldType::class);
-        (new MarkdownPlugin())->register(new PluginContext($registry, MarkdownPlugin::ID));
+        (new MarkdownPlugin())->register(new PluginContext(new PluginCapabilities(fieldTypes: $registry), MarkdownPlugin::ID));
     }
 
     // -------------------------------------------------------- normalization
@@ -125,7 +126,7 @@ final class MarkdownFieldTypeTest extends TestCase
     public function test_required_empty_is_handled_by_core_not_here(): void
     {
         $registry = new FieldTypeRegistry();
-        (new MarkdownPlugin())->register(new PluginContext($registry, MarkdownPlugin::ID));
+        (new MarkdownPlugin())->register(new PluginContext(new PluginCapabilities(fieldTypes: $registry), MarkdownPlugin::ID));
 
         $collection = new Collection(1, 'posts', 'Posts', '#', '', [$this->field(required: true)], ['kind' => 'collection']);
         $errors     = (new Validator($registry))->validate($collection, ['body' => $this->type->normalize('')]);
@@ -137,7 +138,7 @@ final class MarkdownFieldTypeTest extends TestCase
     public function test_a_valid_required_value_passes_through_core_validation(): void
     {
         $registry = new FieldTypeRegistry();
-        (new MarkdownPlugin())->register(new PluginContext($registry, MarkdownPlugin::ID));
+        (new MarkdownPlugin())->register(new PluginContext(new PluginCapabilities(fieldTypes: $registry), MarkdownPlugin::ID));
 
         $collection = new Collection(1, 'posts', 'Posts', '#', '', [$this->field(required: true)], ['kind' => 'collection']);
         $errors     = (new Validator($registry))->validate($collection, ['body' => $this->type->normalize('# Hello')]);
