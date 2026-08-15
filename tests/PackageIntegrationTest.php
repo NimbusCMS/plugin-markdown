@@ -7,6 +7,7 @@ namespace NimbusCMS\Markdown\Tests;
 use Nimbus\Content\Field;
 use Nimbus\Content\FieldTypeRegistry;
 use Nimbus\Content\UnknownFieldType;
+use Nimbus\Plugin\PluginCapabilities;
 use Nimbus\Plugin\PluginDiagnostic;
 use Nimbus\Plugin\PluginLoader;
 use NimbusCMS\Markdown\MarkdownPlugin;
@@ -91,7 +92,7 @@ final class PackageIntegrationTest extends TestCase
     {
         $registry    = new FieldTypeRegistry();
         $loader      = new PluginLoader($this->installedAs());
-        $diagnostics = $loader->load($registry);
+        $diagnostics = $loader->load(new PluginCapabilities(fieldTypes: $registry));
 
         self::assertSame([], $diagnostics, 'a correctly installed package must load cleanly');
         self::assertSame(
@@ -108,7 +109,7 @@ final class PackageIntegrationTest extends TestCase
     public function test_core_field_types_are_untouched_by_installation(): void
     {
         $registry = new FieldTypeRegistry();
-        (new PluginLoader($this->installedAs()))->load($registry);
+        (new PluginLoader($this->installedAs()))->load(new PluginCapabilities(fieldTypes: $registry));
 
         foreach (['text', 'textarea', 'number', 'boolean', 'relation'] as $core) {
             self::assertSame('core', $registry->providerOf($core));
@@ -121,7 +122,7 @@ final class PackageIntegrationTest extends TestCase
     {
         $registry    = new FieldTypeRegistry();
         $loader      = new PluginLoader($this->installedAs(), [MarkdownPlugin::ID => false]);
-        $diagnostics = $loader->load($registry);
+        $diagnostics = $loader->load(new PluginCapabilities(fieldTypes: $registry));
 
         self::assertSame([], $loader->registered());
         self::assertFalse($registry->has('markdown'));
@@ -133,7 +134,7 @@ final class PackageIntegrationTest extends TestCase
     public function test_with_the_package_disabled_writes_are_blocked_and_content_is_kept(): void
     {
         $registry = new FieldTypeRegistry();
-        (new PluginLoader($this->installedAs(), [MarkdownPlugin::ID => false]))->load($registry);
+        (new PluginLoader($this->installedAs(), [MarkdownPlugin::ID => false]))->load(new PluginCapabilities(fieldTypes: $registry));
 
         $field  = new Field('body', 'Body', 'markdown');
         $stored = "# Still here\n\nWith **bold** text.";
@@ -160,11 +161,11 @@ final class PackageIntegrationTest extends TestCase
         $path = $this->installedAs();
 
         $disabled = new FieldTypeRegistry();
-        (new PluginLoader($path, [MarkdownPlugin::ID => false]))->load($disabled);
+        (new PluginLoader($path, [MarkdownPlugin::ID => false]))->load(new PluginCapabilities(fieldTypes: $disabled));
         self::assertFalse($disabled->has('markdown'));
 
         $enabled = new FieldTypeRegistry();
-        (new PluginLoader($path, [MarkdownPlugin::ID => true]))->load($enabled);
+        (new PluginLoader($path, [MarkdownPlugin::ID => true]))->load(new PluginCapabilities(fieldTypes: $enabled));
 
         self::assertTrue($enabled->has('markdown'), 'flipping the switch back is all it takes');
         self::assertSame('markdown', $enabled->get('markdown')->type());
@@ -182,7 +183,7 @@ final class PackageIntegrationTest extends TestCase
 
         $registry    = new FieldTypeRegistry();
         $loader      = new PluginLoader($this->installedJson);
-        $diagnostics = $loader->load($registry);
+        $diagnostics = $loader->load(new PluginCapabilities(fieldTypes: $registry));
 
         self::assertSame([MarkdownPlugin::ID => $manifest['name']], $loader->registered());
         self::assertCount(1, $diagnostics);
