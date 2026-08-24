@@ -9,6 +9,7 @@ use Nimbus\Content\Field;
 use Nimbus\Content\FieldTypeRegistry;
 use Nimbus\Content\UnknownFieldType;
 use Nimbus\Content\Validator;
+use Nimbus\Mcp\Guide\SkillRegistry;
 use Nimbus\Plugin\PluginCapabilities;
 use Nimbus\Plugin\PluginContext;
 use NimbusCMS\Markdown\MarkdownFieldType;
@@ -40,6 +41,20 @@ final class MarkdownFieldTypeTest extends TestCase
         self::assertTrue($registry->has('markdown'));
         self::assertSame('markdown', $registry->get('markdown')->type());
         self::assertSame(MarkdownPlugin::ID, $registry->providerOf('markdown'));
+    }
+
+    public function test_the_plugin_publishes_an_agent_guide(): void
+    {
+        $skills = new SkillRegistry();
+        (new MarkdownPlugin())->register(new PluginContext(new PluginCapabilities(skills: $skills), MarkdownPlugin::ID));
+
+        $documents = $skills->documents();
+        self::assertCount(1, $documents);
+        self::assertSame('nimbus://guide/plugin/nimbuscms.markdown', $documents[0]->uri);
+        self::assertSame(MarkdownPlugin::ID, $documents[0]->owner);
+        // It describes the field's contract for an agent.
+        self::assertStringContainsString('markdown', $documents[0]->body);
+        self::assertStringContainsString('max_length', $documents[0]->body);
     }
 
     public function test_the_type_appears_in_the_field_picker(): void
@@ -132,7 +147,8 @@ final class MarkdownFieldTypeTest extends TestCase
         $errors     = (new Validator($registry))->validate($collection, ['body' => $this->type->normalize('')]);
 
         self::assertArrayHasKey('body', $errors);
-        self::assertStringContainsString('required', $errors['body']);
+        // Core validation now returns structured FieldError objects, not strings.
+        self::assertStringContainsString('required', $errors['body']->message);
     }
 
     public function test_a_valid_required_value_passes_through_core_validation(): void

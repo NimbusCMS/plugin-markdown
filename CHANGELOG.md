@@ -6,6 +6,20 @@ Notable changes to the official NimbusCMS Markdown plugin. Follows
 
 ## [Unreleased]
 
+### Added
+
+- **Agent guide** — the plugin now publishes a short guide for AI agents via the
+  new `skills()` capability (NimbusCMS ADR 0013), served over MCP as
+  `nimbus://guide/plugin/nimbuscms.markdown`. It tells an agent the `markdown`
+  field's contract (send/receive raw Markdown source, whitespace is preserved,
+  `max_length`), so enabling this plugin teaches agents how to drive its field.
+
+### Changed
+
+- Bumped the `nimbuscms/nimbus` dev dependency to pick up the `skills()`
+  capability, and adapted a test to core's structured `FieldError` validation
+  results.
+
 ## [0.1.0-alpha.1] — 2026-08-02
 
 The first tagged release, coordinated with `nimbuscms/nimbus` 0.1.0-alpha.1.
